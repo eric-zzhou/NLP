@@ -1,0 +1,1 @@
+print("count({})".format(5))
