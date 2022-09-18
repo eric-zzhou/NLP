@@ -1,1 +1,3 @@
-print("count({})".format(5))
+prevpos = 0
+pos = 1
+print("%s+%s" % (prevpos, pos))
