@@ -50,7 +50,7 @@ class ConsecutiveNPChunkTagger(nltk.TaggerI):
                 train_set.append((featureset, tag))
                 history.append(tag)
         # Using maximum entropy classifier
-        self.classifier = nltk.MaxentClassifier.train(train_set, algorithm='iis', trace=0)
+        self.classifier = nltk.MaxentClassifier.train(train_set, algorithm='GIS', trace=0)
 
     def tag(self, sentence):
         # Tag set using features and tracking history
