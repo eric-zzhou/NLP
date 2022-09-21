@@ -1,3 +1,2 @@
-prevpos = 0
-pos = 1
-print("%s+%s" % (prevpos, pos))
+import math
+print(math.ceil(0.2))
