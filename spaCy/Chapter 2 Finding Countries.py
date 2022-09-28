@@ -4,9 +4,9 @@ from spacy.tokens import Span
 import json
 
 # List of countries and text string
-with open("countries.json", encoding="utf8") as f:
+with open("data_files/countries.json", encoding="utf8") as f:
     COUNTRIES = json.loads(f.read())
-with open("country_text.txt", encoding="utf8") as f:
+with open("data_files/country_text.txt", encoding="utf8") as f:
     TEXT = f.read()
 
 # Loading stuff and building things
