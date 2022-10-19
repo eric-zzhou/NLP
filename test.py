@@ -1,2 +1,3 @@
-import math
-print(math.ceil(0.2))
+useful_words = ['hi', 'bye', 'die', 'hi']
+newDict = dict([(word, True) for word in useful_words])
+print(newDict)
