@@ -20,32 +20,42 @@ DEFAULT_SENT = 3
 url = input('Article to summarize: ')
 if url == 'd':
     url = DEFAULT_LINK
+elif url == 'custom':
+    url = False
 top_n = input('Summary length (in sentences): ')
 if top_n == 'd':
     top_n = DEFAULT_SENT
 
-# Webscraping portion
-req = Request(
-    url=url,
-    headers={'User-Agent': 'Mozilla/5.0'}
-)
-html = urlopen(req).read().decode('utf8')
+if url:
+    # Webscraping portion
+    req = Request(
+        url=url,
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    html = urlopen(req).read().decode('utf8')
 
-# Limiting it down to actual content
-startstr = input("What are the first 2 words of the article? ").lower()
-if startstr == 'd':
-    startstr = DEFAULT_START
-endstr = input("What are the final 2 words of the article? ").lower()
-if endstr == 'd':
-    endstr = DEFAULT_END
-print("\n\n")
-raw = bs(html, 'html.parser').get_text()
-raw = raw.replace(".", ". ")
-low_raw = raw.lower()
-start = low_raw.find(startstr.lower())
-end = low_raw.rfind(endstr.lower())
-text = raw[start:(end + len(endstr))]
-
+    # Limiting it down to actual content
+    startstr = input("What are the first 2 words of the article? ").lower()
+    if startstr == 'd':
+        startstr = DEFAULT_START
+    endstr = input("What are the final 2 words of the article? ").lower()
+    if endstr == 'd':
+        endstr = DEFAULT_END
+    print("\n\n")
+    raw = bs(html, 'html.parser').get_text()
+    raw = raw.replace(".", ". ")
+    low_raw = raw.lower()
+    start = low_raw.find(startstr.lower())
+    end = low_raw.rfind(endstr.lower())
+    text = raw[start:(end + len(endstr))]
+else:
+    thing = input("Is custom file updated? \t")
+    if 'n' in thing:
+        exit(1)
+    else:
+        with open('customtest.txt') as f:
+            text = f.readlines()
+        text = '\n'.join(text)
 # Cleaning up text
 # text = re.sub(r'[0-9]+', ' ', text)  # replace all numbers
 # text = re.sub(r'\[[0-9]*\]', ' ', text)
@@ -80,6 +90,7 @@ for sentence in sentences:
     if len(s_words) < MAX_SENT_LEN:
         for word in s_words:
             freq_sent_score[sentence] += fd[word]
+print(freq_sent_score)
 # Summary based on frequency
 print("Word-Frequency Based Summary:")
 freq_best_sents = heapq.nlargest(int(top_n), freq_sent_score, key=freq_sent_score.get)
