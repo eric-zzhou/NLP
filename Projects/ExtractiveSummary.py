@@ -77,6 +77,7 @@ stop = set(stopwords.words('english') + ["com"])
 clean_words = [w.lower() for w in word_tokenize(clean_text) if w not in stop]
 fd = FreqDist(clean_words)
 news_words = [w.lower() for fid in reuters.fileids() for w in reuters.words(fid) if w.isalpha()]
+news_words += clean_text.split()
 # print(news_words)
 tf_news = TfidfVectorizer(use_idf=True, sublinear_tf=True, stop_words=stop)
 tf_news_doc = tf_news.fit_transform([' '.join(news_words)])
@@ -92,7 +93,7 @@ for sentence in sentences:
             freq_sent_score[sentence] += fd[word]
 print(freq_sent_score)
 # Summary based on frequency
-print("Word-Frequency Based Summary:")
+print("\n\nWord-Frequency Based Summary:")
 freq_best_sents = heapq.nlargest(int(top_n), freq_sent_score, key=freq_sent_score.get)
 freq_summarized_text = ""
 for sentence in sentences:
