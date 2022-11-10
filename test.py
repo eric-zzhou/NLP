@@ -1,25 +1,3 @@
-# from sklearn.feature_extraction.text import TfidfVectorizer
-#
-# hello = "chicken nuggets are cool chicken nuggets are cool chicken chicken are are are are are are"
-# tf = TfidfVectorizer(use_idf=True, sublinear_tf=True)
-# tf_yes = tf.fit_transform([hello])
-# print(tf_yes, end="\n\n\n")
-#
-# something = tf.transform([" chicken cool chicken, chicken hello my name is lol"])
-# print(type(something))
-# print(something)
-# print(sum(something.data))
-
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-
-
-sentences = [
-    "Einstein age death",
-    "Einstein died in 2015",
-    "Bob died in 2015",
-    "Einstein was a scientist"
-]
-sentence_embeddings = model.encode(sentences)
-print(cosine_similarity([sentence_embeddings[0]], sentence_embeddings[1:]))
+from nltk import sent_tokenize
+sents = sent_tokenize("My pincher collar is snapped on. Then comes the electric zapper collar. Finally, my purple at-home collar is taken off and I know I’m going for a walk to the dog park. I’m so excited to see my friends. I hope Spike or Thunder are there already. They're the most fun to chase and tumble with. My human is pretty strict with me. I’m only allowed on the grass and not on the sidewalks. I think she’s afraid I’m going to jump on the other humans. I don’t understand why everyone else gets to jump on the benches and run wild on the sidewalks. They don’t listen to their humans. I know I could ignore mine but if I do she may zap me and it’s just not worth it. She probably wouldn’t let me back at the dog park if I didn’t listen to her. I just love the dog park.")
+print(len(sents[0:10]))
