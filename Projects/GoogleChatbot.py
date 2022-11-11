@@ -1,8 +1,10 @@
 from BaseChatbot import naming, greeting, tfidf_cosim_smalltalk, symbs
-from ExtractiveSummary import generate_freq_summary
+from ExtractiveSummary import generate_freq_sumsent
+from GoogleTest import scrape_google
 
 # Main loop
 BOT_NAME = "NotGoogle"
+result = None
 n = input(f'\nHello, my name is {BOT_NAME}. What is your name?:\t')
 name = naming(n)  # naming function
 while True:
@@ -31,9 +33,10 @@ while True:
         x = tfidf_cosim_smalltalk(query)
         print(f'\n{BOT_NAME}: {x}')
     else:
-        print("lol u suck")
-    # Searching through corpus fo response
-    # else:
-    #     x = stem_tfidf(query)
-    #     g = cos_sim(x)
-    #     print(f'\n{ACT_BOT_NAME}: {g}')
+        result = scrape_google(query)
+        # todo add numbers to link and be able to get summaries and sentences around
+        print(f'\n{BOT_NAME}: ')
+        result.sort(key=lambda z: z[2], reverse=True)
+        for ind, cont in enumerate(result):
+            lk, sent, m, m_in = cont
+            print(f"\t{ind + 1}. {lk}: {sent[m_in]}")

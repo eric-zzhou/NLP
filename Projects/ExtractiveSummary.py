@@ -15,6 +15,8 @@ stop = set(stopwords.words('english') + ["com"])
 MAX_SENT_LEN = 25
 
 
+# https://stackoverflow.com/questions/1936466/how-to-scrape-only-visible-webpage-text-with-beautifulsoup#comment28302706_1983219
+
 def clean_text(text):
     # Cleaning up text
     # text = re.sub(r'[0-9]+', ' ', text)  # replace all numbers
@@ -36,6 +38,11 @@ def clean_text(text):
     # Check word importance
     clean_words = [w.lower() for w in word_tokenize(clean_text) if w not in stop]
     return clean_words, sentences
+
+
+def generate_freq_sumsent(sentences, length):
+    text = ' '.join(sentences)
+    return generate_freq_summary(text, length)
 
 
 # Frequency scoring

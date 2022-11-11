@@ -1,3 +1,4 @@
-from nltk import sent_tokenize
-sents = sent_tokenize("My pincher collar is snapped on. Then comes the electric zapper collar. Finally, my purple at-home collar is taken off and I know I’m going for a walk to the dog park. I’m so excited to see my friends. I hope Spike or Thunder are there already. They're the most fun to chase and tumble with. My human is pretty strict with me. I’m only allowed on the grass and not on the sidewalks. I think she’s afraid I’m going to jump on the other humans. I don’t understand why everyone else gets to jump on the benches and run wild on the sidewalks. They don’t listen to their humans. I know I could ignore mine but if I do she may zap me and it’s just not worth it. She probably wouldn’t let me back at the dog park if I didn’t listen to her. I just love the dog park.")
-print(len(sents[0:10]))
+result = [("test1", [0, 1, 2], 3, 1), ("test2", [5, 3, 2], 4, 2), ("test3", [23, 6, 7], 8, 29)]
+result.sort(key=lambda z: z[2], reverse=True)
+for y, n in enumerate(result):
+    print(y, n)
