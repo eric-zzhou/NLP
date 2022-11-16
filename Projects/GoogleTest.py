@@ -59,16 +59,7 @@ def scrape_google(search_term):
                               'Chrome/87.0.4280.88 Safari/537.36'}
         )
         html = urlopen(req).read().decode('utf8')
-        # soup = bs(html, features='html.parser')
-        # # kill all script and style elements
-        # for script in soup(["script", "style"]):
-        #     script.extract()  # rip it out
-        # # get text
-        # text = soup.body.get_text()
-        # text = text.replace(".", ". ")
-        # text = re.sub(r'\s+', ' ', text)
         text = text_from_html(html)
-        # print(generate_freq_summary(text, 5), end="\n\n\n")
         sentences = sent_tokenize(text)
         if not sentences:
             google_sents[ind] = (link, ["Error in scraping"], -1, 0)
@@ -77,8 +68,6 @@ def scrape_google(search_term):
         sims = cosine_similarity([sentence_embeddings[0]], sentence_embeddings[1:])
         index_max = np.argmax(sims)
         google_sents[ind] = (link, sentences, np.max(sims), index_max)
-        # print(generate_freq_summary(text, 3))
-        # print(sentences[index_max])
     return google_sents
 
 
