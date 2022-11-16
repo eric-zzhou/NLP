@@ -7,9 +7,9 @@ import heapq
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup as bs
 from nltk import word_tokenize, FreqDist
-from nltk.corpus import stopwords, reuters
-from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.corpus import stopwords
 from collections import defaultdict
+from HTMLCleaner import text_from_html
 
 stop = set(stopwords.words('english') + ["com"])
 MAX_SENT_LEN = 25
@@ -67,9 +67,7 @@ def generate_freq_summary(text, length):
 
 if __name__ == "__main__":
     # Constants and user input
-    DEFAULT_LINK = "https://www.hcn.org/issues/138/barry-lopez-we-are-shaped-by-the-sound-of-wind-the-slant-of-sunlight#:~:text=Barry%20Lopez%3A%20We%20are%20shaped,Country%20News%20–%20Know%20the%20West"
-    DEFAULT_START = "in the"
-    DEFAULT_END = "of community"
+    DEFAULT_LINK = "https://www.hcn.org/issues/138/barry-lopez-we-are-shaped-by-the-sound-of-wind-the-slant-of-sunlight"
     DEFAULT_SENT = 3
 
     url = input('Article to summarize: ')
@@ -80,6 +78,8 @@ if __name__ == "__main__":
     top_n = input('Summary length (in sentences): ')
     if top_n == 'd':
         top_n = DEFAULT_SENT
+    else:
+        top_n = int(top_n)
 
     if url:
         # Webscraping portion
@@ -88,21 +88,7 @@ if __name__ == "__main__":
             headers={'User-Agent': 'Mozilla/5.0'}
         )
         html = urlopen(req).read().decode('utf8')
-
-        # Limiting it down to actual content
-        startstr = input("What are the first 2 words of the article? ").lower()
-        if startstr == 'd':
-            startstr = DEFAULT_START
-        endstr = input("What are the final 2 words of the article? ").lower()
-        if endstr == 'd':
-            endstr = DEFAULT_END
-        print("\n\n")
-        raw = bs(html, 'html.parser').get_text()
-        raw = raw.replace(".", ". ")
-        low_raw = raw.lower()
-        start = low_raw.find(startstr.lower())
-        end = low_raw.rfind(endstr.lower())
-        text = raw[start:(end + len(endstr))]
+        text = text_from_html(html)
     else:
         thing = input("Is custom file updated? \t")
         if 'n' in thing:
@@ -114,41 +100,3 @@ if __name__ == "__main__":
 
     print("\n\nWord-Frequency Based Summary:")
     print(generate_freq_summary(text, top_n), end='\n\n\n')
-
-    # clean_words, sentences = clean_text(text)
-    # news_words = [w.lower() for fid in reuters.fileids() for w in reuters.words(fid) if w.isalpha()]
-    # news_words += clean_words.split()
-    # tf_news = TfidfVectorizer(use_idf=True, sublinear_tf=True, stop_words=stop)
-    # tf_news_doc = tf_news.fit_transform([' '.join(news_words)])
-    # tf = TfidfVectorizer(use_idf=True, sublinear_tf=True, stop_words=stop)
-    # tf_this = tf.fit_transform([' '.join(w for w in word_tokenize(text.lower()) if w.isalpha())])
-    #
-    # # Current news doc TFIDF scoring
-    # btf_sent_score = {}
-    # for sentence in sentences:
-    #     sent_len = len(word_tokenize(sentence))
-    #     if sent_len < MAX_SENT_LEN:
-    #         btf_sent_score[sentence] = sum(tf.transform([sentence]).data)
-    # # Summary based on current news doc TFIDF
-    # print("Current Article TFIDF Based Summary:")
-    # btf_best_sents = heapq.nlargest(int(top_n), btf_sent_score, key=btf_sent_score.get)
-    # btf_summarized_text = ""
-    # for sentence in sentences:
-    #     if sentence in btf_best_sents:
-    #         btf_summarized_text += sentence + ' '
-    # print(btf_summarized_text, end="\n\n\n")
-    #
-    # # News TFIDF scoring
-    # tf_sent_score = {}
-    # for sentence in sentences:
-    #     sent_len = len(word_tokenize(sentence))
-    #     if sent_len < MAX_SENT_LEN:
-    #         tf_sent_score[sentence] = sum(tf_news.transform([sentence]).data)
-    # # Summary based on current news doc TFIDF
-    # print("News Corpus TFIDF Based Summary:")
-    # tf_best_sents = heapq.nlargest(int(top_n), tf_sent_score, key=tf_sent_score.get)
-    # tf_summarized_text = ""
-    # for sentence in sentences:
-    #     if sentence in tf_best_sents:
-    #         tf_summarized_text += sentence + ' '
-    # print(tf_summarized_text)

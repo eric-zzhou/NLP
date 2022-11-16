@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup as bs
 from bs4.element import Comment
 from urllib.request import Request, urlopen
 from nltk import sent_tokenize
-import string
 
 
 def tag_visible(element):

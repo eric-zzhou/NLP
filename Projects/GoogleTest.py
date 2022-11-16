@@ -49,8 +49,8 @@ def scrape_google(search_term):
     # print(links, end="\n\n\n")
 
     links = list(links)[0:5]
-    google_sents = []
-    for link in links:
+    google_sents = [None] * 5
+    for ind, link in enumerate(links):
         # print("Getting: " + link)
         req = Request(
             url=link,
@@ -71,12 +71,12 @@ def scrape_google(search_term):
         # print(generate_freq_summary(text, 5), end="\n\n\n")
         sentences = sent_tokenize(text)
         if not sentences:
-            google_sents.append((link, "Error in scraping", -1, -1))
+            google_sents[ind] = (link, ["Error in scraping"], -1, 0)
             continue
         sentence_embeddings = model.encode(query + sentences)
         sims = cosine_similarity([sentence_embeddings[0]], sentence_embeddings[1:])
         index_max = np.argmax(sims)
-        google_sents.append((link, sentences, np.max(sims), index_max))
+        google_sents[ind] = (link, sentences, np.max(sims), index_max)
         # print(generate_freq_summary(text, 3))
         # print(sentences[index_max])
     return google_sents

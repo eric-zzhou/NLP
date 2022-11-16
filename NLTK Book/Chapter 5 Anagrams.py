@@ -2,11 +2,11 @@ from collections import defaultdict
 import nltk
 
 words = nltk.corpus.words.words('en')
-print("stare" in words)
+# print("stare" in words)
 
 anagrams = defaultdict(list)
 for word in words:
-    key = ''.join(sorted(word))  # sorts letters in word alphabeticaally and recombines it
+    key = ''.join(sorted(word))  # sorts letters in word alphabetically and recombines it
     anagrams[key].append(word)
 
 # anagrams = nltk.Index((''.join(sorted(w)), w) for w in words)
