@@ -1,10 +1,10 @@
 from BaseChatbot import naming, greeting, tfidf_cosim_smalltalk, symbs
 from ExtractiveSummary import generate_freq_sumsent
-from GoogleTest import scrape_google
+from GoogleTestImprov import scrape_google
 
 # Main loop
 BOT_NAME = "NotGoogle"
-result = None
+result = [None] * 5
 n = input(f'\nHello, my name is {BOT_NAME}. What is your name?:\t')
 name = naming(n)  # naming function
 while True:
@@ -15,7 +15,44 @@ while True:
     if query == 'bye':
         print(f'\n{BOT_NAME}: This is {BOT_NAME} signing off. Bye, take care {name}')
         break
-
+    # Getting summary
+    elif query.startswith("summary"):
+        try:
+            ii = int(query[7:])
+        except ValueError:
+            print(f"{BOT_NAME}: Summary is a function that requires to be followed by a number e.g. summary(n)")
+            continue
+        if ii < 1 or ii > 5:
+            print(f"{BOT_NAME}: Value provided to summary function out of bounds, should be from 1 to 5")
+            continue
+        ii -= 1
+        if result[ii]:
+            print(f'\n{BOT_NAME}:')
+            print(f'\t{generate_freq_sumsent(result[ii][1], 3)}')
+        else:
+            print(f'\n{BOT_NAME}: Please enter a query before getting a summary')
+    # Getting context
+    elif query.startswith("context"):
+        try:
+            ii = int(query[7:])
+        except ValueError:
+            print(f"{BOT_NAME}: Context is a function that requires to be followed by a number e.g. context(n)")
+            continue
+        if ii < 1 or ii > 5:
+            print(F"{BOT_NAME}: Value provided to context function out of bounds, should be from 1 to 5")
+            continue
+        ii -= 1
+        if result[ii]:
+            print(f'\n{BOT_NAME}:')
+            lk, sent, m, m_in = result[ii]
+            s = sent[m_in]
+            if m_in >= 1:
+                s = sent[m_in - 1] + " " + s
+            if m_in <= len(sent) - 2:
+                s = s + " " + sent[m_in + 1]
+            print(f'\t{s}')
+        else:
+            print(f'\n{BOT_NAME}: Please enter a query before getting the context')
     # Changing names
     elif 'my name is' in query or 'call me' in query or 'name is' in query or 'change my name to' in query \
             or 'change name to' in query:
@@ -34,7 +71,6 @@ while True:
         print(f'\n{BOT_NAME}: {x}')
     else:
         result = scrape_google(query)
-        # todo add numbers to link and be able to get summaries and sentences around
         print(f'\n{BOT_NAME}: ')
         result.sort(key=lambda z: z[2], reverse=True)
         for ind, cont in enumerate(result):

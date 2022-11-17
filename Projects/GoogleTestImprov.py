@@ -1,5 +1,6 @@
 # https://stackoverflow.com/questions/38619478/google-search-web-scraping-with-python
-
+# https://stackoverflow.com/questions/6893968/how-to-get-the-return-value-from-a-thread-in-python
+import time
 from urllib.request import Request, urlopen
 import urllib.parse as urlpar
 from bs4 import BeautifulSoup as bs
@@ -8,14 +9,33 @@ from nltk.corpus import stopwords
 from nltk import word_tokenize, sent_tokenize
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from threading import Thread
 from HTMLCleaner import text_from_html
-import time
 
 model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 
 # Constants and user input
 GOOGLE_LINK = "https://www.google.com/search?q="
 stop = set(stopwords.words('english') + ["com"])
+
+
+def scrape_link(link, ind, query, arr):
+    req = Request(
+        url=link,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) '
+                          'Chrome/87.0.4280.88 Safari/537.36'}
+    )
+    html = urlopen(req).read().decode('utf8')
+    text = text_from_html(html)
+    sentences = sent_tokenize(text)
+    if not sentences:
+        arr[ind] = (link, ["Error in scraping"], -1, 0)
+        return
+    sentence_embeddings = model.encode(query + sentences)
+    sims = cosine_similarity([sentence_embeddings[0]], sentence_embeddings[1:])
+    index_max = np.argmax(sims)
+    arr[ind] = (link, sentences, np.max(sims), index_max)
 
 
 def scrape_google(search_term):
@@ -49,24 +69,12 @@ def scrape_google(search_term):
 
     links = list(links)[0:5]
     google_sents = [None] * 5
+    threads = [None] * 5
     for ind, link in enumerate(links):
-        # print("Getting: " + link)
-        req = Request(
-            url=link,
-            headers={
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) '
-                              'Chrome/87.0.4280.88 Safari/537.36'}
-        )
-        html = urlopen(req).read().decode('utf8')
-        text = text_from_html(html)
-        sentences = sent_tokenize(text)
-        if not sentences:
-            google_sents[ind] = (link, ["Error in scraping"], -1, 0)
-            continue
-        sentence_embeddings = model.encode(query + sentences)
-        sims = cosine_similarity([sentence_embeddings[0]], sentence_embeddings[1:])
-        index_max = np.argmax(sims)
-        google_sents[ind] = (link, sentences, np.max(sims), index_max)
+        threads[ind] = Thread(target=scrape_link, args=(link, ind, query, google_sents))
+        threads[ind].start()
+    for i in range(len(threads)):
+        threads[i].join()
     return google_sents
 
 
