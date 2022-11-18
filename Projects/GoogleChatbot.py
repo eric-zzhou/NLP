@@ -27,10 +27,10 @@ while True:
             continue
         ii -= 1
         if result[ii]:
-            print(f'\n{BOT_NAME}:')
+            print(f'{BOT_NAME}:')
             print(f'\t{generate_freq_sumsent(result[ii][1], 3)}')
         else:
-            print(f'\n{BOT_NAME}: Please enter a query before getting a summary')
+            print(f'{BOT_NAME}: Please enter a query before getting a summary')
     # Getting context
     elif query.startswith("context"):
         try:
@@ -43,7 +43,7 @@ while True:
             continue
         ii -= 1
         if result[ii]:
-            print(f'\n{BOT_NAME}:')
+            print(f'{BOT_NAME}:')
             lk, sent, m, m_in = result[ii]
             s = sent[m_in]
             if m_in >= 1:
@@ -52,26 +52,26 @@ while True:
                 s = s + " " + sent[m_in + 1]
             print(f'\t{s}')
         else:
-            print(f'\n{BOT_NAME}: Please enter a query before getting the context')
+            print(f'{BOT_NAME}: Please enter a query before getting the context')
     # Changing names
     elif 'my name is' in query or 'call me' in query or 'name is' in query or 'change my name to' in query \
             or 'change name to' in query:
         name = naming(query)
-        print(f'\n{BOT_NAME}: Your name is {name}')
+        print(f'{BOT_NAME}: Your name is {name}')
     elif 'what' in query and 'my' in query and 'name' in query:
         print(name)
     elif 'what' in query and 'your' in query and 'name' in query:
         print(f"My name is {BOT_NAME}. Nice to meet you!")
     # Greeting
     elif greeting(query) is not None:
-        print(f'\n{BOT_NAME}: {greeting(query)} {name}')
+        print(f'{BOT_NAME}: {greeting(query)} {name}')
     # Small talk
     elif tfidf_cosim_smalltalk(query) is not None:
         x = tfidf_cosim_smalltalk(query)
-        print(f'\n{BOT_NAME}: {x}')
+        print(f'{BOT_NAME}: {x}')
     else:
         result = scrape_google(query)
-        print(f'\n{BOT_NAME}: ')
+        print(f'{BOT_NAME}: ')
         result.sort(key=lambda z: z[2], reverse=True)
         for ind, cont in enumerate(result):
             lk, sent, m, m_in = cont
