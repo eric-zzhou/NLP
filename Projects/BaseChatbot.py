@@ -7,7 +7,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem import WordNetLemmatizer
 
-symbs = '!@#$%^&*()<>,;?\''
+symbs = '!@#$%^&*()<>,.;?\''
 
 # Greetings, basically maps different user greetings to a random output greeting
 greet_in = ('hey', 'sup', 'waddup', 'hi', 'hello', 'good day', 'heya', 'hiya', 'howdy',
