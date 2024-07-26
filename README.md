@@ -1,4 +1,5 @@
 # Natural Language Processing (NLP)
+- [Final Presentation](https://docs.google.com/presentation/d/1geV5Y_Im0sF7DnpHZNokX73uCpegDyOd/edit?usp=sharing&ouid=109714899202359812575&rtpof=true&sd=true)
 - Learning about NLP
   - [Medium](Medium) includes all code written following [30 day NLP course](https://medium.com/coders-mojo/day-1-30-days-of-natural-language-processing-series-with-projects-b29211d5450c) by Naina Chaturvedi
   - [NLTK Book](NLTK%20Book) includes all code written following the online [NLTK book](https://www.nltk.org/book/)
